@@ -1,7 +1,7 @@
 ﻿/*  CTRADER GURU --> Template 1.0.4
 
 Changelog (Armando Brecciaroli):
-v.1.0.5 (April 20, 2020) Add ON/OFF alert.
+v.1.0.5 (April 20, 2020) Add ON/OFF alert
 
     Homepage    : https://ctrader.guru/
     Telegram    : https://t.me/ctraderguru
