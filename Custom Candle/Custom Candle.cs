@@ -1,4 +1,4 @@
-﻿/*  CTRADER GURU --> Template 1.0.3
+﻿/*  CTRADER GURU --> Template 1.0.4
 
     Homepage    : https://ctrader.guru/
     Telegram    : https://t.me/ctraderguru
@@ -11,10 +11,10 @@
 */
 
 using System;
+using System.IO;
 using cAlgo.API;
 using System.Net;
 using System.Text;
-using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Collections.Specialized;
 
@@ -54,7 +54,7 @@ namespace cAlgo
         /// <summary>
         /// La versione del prodotto, progressivo, utilie per controllare gli aggiornamenti se viene reso disponibile sul sito ctrader.guru
         /// </summary>
-        public const string VERSION = "1.0.0";
+        public const string VERSION = "1.0.1";
 
         #endregion
 
@@ -182,8 +182,7 @@ namespace cAlgo
 
 
 
-            }
-            catch (Exception exp)
+            } catch (Exception exp)
             {
 
                 Chart.DrawStaticText("Alert", string.Format("{0} : error, {1}", NAME, exp), VerticalAlignment.Center, HorizontalAlignment.Center, Color.Red);
@@ -210,7 +209,8 @@ namespace cAlgo
             int index = BarsCustom.Count - 1;
 
             // --> Potrei non avere un numero sufficiente di candele
-            if (index < CandleShow || index < 1) return;
+            if (index < CandleShow || index < 1)
+                return;
 
             // --> eseguo un ciclo aretroso per disegnare le ultime candele
             for (int i = 0; i < CandleShow; i++)
@@ -273,8 +273,7 @@ namespace cAlgo
 
                     }
 
-                }
-                catch
+                } catch
                 {
 
 
@@ -287,32 +286,58 @@ namespace cAlgo
         private int _getTimeFrameCandleInMinutes(TimeFrame MyCandle)
         {
 
-            if (MyCandle == TimeFrame.Daily) return 60 * 24;
-            if (MyCandle == TimeFrame.Day2) return 60 * 24 * 2;
-            if (MyCandle == TimeFrame.Day3) return 60 * 24 * 3;
-            if (MyCandle == TimeFrame.Hour) return 60;
-            if (MyCandle == TimeFrame.Hour12) return 60 * 12;
-            if (MyCandle == TimeFrame.Hour2) return 60 * 2;
-            if (MyCandle == TimeFrame.Hour3) return 60 * 3;
-            if (MyCandle == TimeFrame.Hour4) return 60 * 4;
-            if (MyCandle == TimeFrame.Hour6) return 60 * 6;
-            if (MyCandle == TimeFrame.Hour8) return 60 * 8;
-            if (MyCandle == TimeFrame.Minute) return 1;
-            if (MyCandle == TimeFrame.Minute10) return 10;
-            if (MyCandle == TimeFrame.Minute15) return 15;
-            if (MyCandle == TimeFrame.Minute2) return 2;
-            if (MyCandle == TimeFrame.Minute20) return 20;
-            if (MyCandle == TimeFrame.Minute3) return 3;
-            if (MyCandle == TimeFrame.Minute30) return 30;
-            if (MyCandle == TimeFrame.Minute4) return 4;
-            if (MyCandle == TimeFrame.Minute45) return 45;
-            if (MyCandle == TimeFrame.Minute5) return 5;
-            if (MyCandle == TimeFrame.Minute6) return 6;
-            if (MyCandle == TimeFrame.Minute7) return 7;
-            if (MyCandle == TimeFrame.Minute8) return 8;
-            if (MyCandle == TimeFrame.Minute9) return 9;
-            if (MyCandle == TimeFrame.Monthly) return 60 * 24 * 30;
-            if (MyCandle == TimeFrame.Weekly) return 60 * 24 * 7;
+            if (MyCandle == TimeFrame.Daily)
+                return 60 * 24;
+            if (MyCandle == TimeFrame.Day2)
+                return 60 * 24 * 2;
+            if (MyCandle == TimeFrame.Day3)
+                return 60 * 24 * 3;
+            if (MyCandle == TimeFrame.Hour)
+                return 60;
+            if (MyCandle == TimeFrame.Hour12)
+                return 60 * 12;
+            if (MyCandle == TimeFrame.Hour2)
+                return 60 * 2;
+            if (MyCandle == TimeFrame.Hour3)
+                return 60 * 3;
+            if (MyCandle == TimeFrame.Hour4)
+                return 60 * 4;
+            if (MyCandle == TimeFrame.Hour6)
+                return 60 * 6;
+            if (MyCandle == TimeFrame.Hour8)
+                return 60 * 8;
+            if (MyCandle == TimeFrame.Minute)
+                return 1;
+            if (MyCandle == TimeFrame.Minute10)
+                return 10;
+            if (MyCandle == TimeFrame.Minute15)
+                return 15;
+            if (MyCandle == TimeFrame.Minute2)
+                return 2;
+            if (MyCandle == TimeFrame.Minute20)
+                return 20;
+            if (MyCandle == TimeFrame.Minute3)
+                return 3;
+            if (MyCandle == TimeFrame.Minute30)
+                return 30;
+            if (MyCandle == TimeFrame.Minute4)
+                return 4;
+            if (MyCandle == TimeFrame.Minute45)
+                return 45;
+            if (MyCandle == TimeFrame.Minute5)
+                return 5;
+            if (MyCandle == TimeFrame.Minute6)
+                return 6;
+            if (MyCandle == TimeFrame.Minute7)
+                return 7;
+            if (MyCandle == TimeFrame.Minute8)
+                return 8;
+            if (MyCandle == TimeFrame.Minute9)
+                return 9;
+            if (MyCandle == TimeFrame.Monthly)
+                return 60 * 24 * 30;
+            if (MyCandle == TimeFrame.Weekly)
+                return 60 * 24 * 7;
 
             return 0;
 
@@ -329,10 +354,10 @@ namespace cAlgo
                 return;
 
             // --> Organizzo i dati per la richiesta degli aggiornamenti
-            Guru.API.RequestProductInfo Request = new Guru.API.RequestProductInfo
+            Guru.API.RequestProductInfo Request = new Guru.API.RequestProductInfo 
             {
 
-                MyProduct = new Guru.Product
+                MyProduct = new Guru.Product 
                 {
 
                     ID = ID,
@@ -393,6 +418,13 @@ namespace Guru
 
     }
 
+    public class CookieInformation
+    {
+
+        public DateTime LastCheck = new DateTime();
+
+    }
+
     /// <summary>
     /// Offre la possibilità di utilizzare le API messe a disposizione da ctrader.guru per verificare gli aggiornamenti del prodotto.
     /// Permessi utente "AccessRights = AccessRights.FullAccess" per accedere a internet ed utilizzare JSON
@@ -413,6 +445,77 @@ namespace Guru
         /// Variabile dove verranno inserite le direttive per la richiesta
         /// </summary>
         private RequestProductInfo RequestProduct = new RequestProductInfo();
+
+        /// <summary>
+        /// Il percorso della cartella dove riporre i cookie
+        /// </summary>
+        private readonly string _mainpath = string.Format("{0}\\cAlgo\\cTrader GURU\\Cookie", Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
+
+        /// <summary>
+        /// Il percorso completo del file che verrà utilizzato per il controllo degli aggiornamenti
+        /// </summary>
+        private readonly string _pathsetup;
+
+        /// <summary>
+        /// Legge e rende disponibile i contenuti del cookie
+        /// </summary>
+        /// <returns></returns>
+        private string _loadSetup()
+        {
+
+            try
+            {
+
+                using (StreamReader r = new StreamReader(_pathsetup))
+                {
+                    string json = r.ReadToEnd();
+
+                    return json;
+                }
+
+            }
+            catch
+            {
+
+                return null;
+
+            }
+
+        }
+
+        /// <summary>
+        /// Scrive i valori del cookie
+        /// </summary>
+        /// <param name="mysetup">I valori da registrare</param>
+        /// <returns></returns>
+        private bool _writeSetup(CookieInformation mysetup)
+        {
+
+            try
+            {
+
+                Directory.CreateDirectory(_mainpath);
+
+                using (StreamWriter file = File.CreateText(_pathsetup))
+                {
+
+                    JsonSerializer serializer = new JsonSerializer();
+
+                    serializer.Serialize(file, mysetup);
+
+                }
+
+                return true;
+
+            }
+            catch
+            {
+
+                return false;
+
+            }
+
+        }
 
         /// <summary>
         /// Variabile dove verranno inserite le informazioni identificative dal server dopo l'inizializzazione della classe API
@@ -478,6 +581,50 @@ namespace Guru
             if (Request.MyProduct.ID <= 0)
                 return;
 
+            // --> Rendo disponibile il file del cookie
+            _pathsetup = string.Format("{0}\\{1}.json", _mainpath, Request.MyProduct.ID);
+
+            CookieInformation MySetup = new CookieInformation();
+            DateTime now = DateTime.Now;
+
+            // --> Evito di chiamare il server se non sono passate almeno 24h
+            try
+            {
+
+                string json = _loadSetup();
+
+                if (json != null && json.Trim().Length > 0)
+                {
+
+                    json = json.Trim();
+
+                    MySetup = JsonConvert.DeserializeObject<CookieInformation>(json);
+                    DateTime ExpireDate = MySetup.LastCheck.AddDays(1);
+
+                    // --> Impedisco di controllare se non è passato il tempo necessario
+                    if (now < ExpireDate)
+                    {
+
+                        ProductInfo.Exception = string.Format("Check for updates scheduled for {0}", ExpireDate.ToString());
+                        return;
+
+                    }
+
+                }
+
+            }
+            catch (Exception Exp)
+            {
+
+                // --> Setup corrotto ? resetto!
+                _writeSetup(MySetup);
+
+                // --> Se ci sono errori non controllo perchè non è gestito ed evito di sovraccaricare il server che mi bloccherebbe
+                ProductInfo.Exception = Exp.Message;
+                return;
+
+            }
+
             // --> Dobbiamo supervisionare la chiamata per registrare l'eccexione
             try
             {
@@ -527,6 +674,10 @@ namespace Guru
 
                 // -->>> Nel cBot necessita l'attivazione di "AccessRights = AccessRights.FullAccess"
                 ProductInfo.LastProduct = JsonConvert.DeserializeObject<Product>(ProductInfo.Source);
+
+                // --> Salviamo la sessione
+                MySetup.LastCheck = now;
+                _writeSetup(MySetup);
 
             }
             catch (Exception Exp)
