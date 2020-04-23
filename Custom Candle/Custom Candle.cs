@@ -473,8 +473,7 @@ namespace Guru
                     return json;
                 }
 
-            }
-            catch
+            } catch
             {
 
                 return null;
@@ -507,8 +506,7 @@ namespace Guru
 
                 return true;
 
-            }
-            catch
+            } catch
             {
 
                 return false;
@@ -612,8 +610,7 @@ namespace Guru
 
                 }
 
-            }
-            catch (Exception Exp)
+            } catch (Exception Exp)
             {
 
                 // --> Setup corrotto ? resetto!
@@ -630,7 +627,7 @@ namespace Guru
             {
 
                 // --> Strutturo le informazioni per la richiesta POST
-                NameValueCollection data = new NameValueCollection
+                NameValueCollection data = new NameValueCollection 
                 {
                     {
                         "account_broker",
@@ -679,8 +676,7 @@ namespace Guru
                 MySetup.LastCheck = now;
                 _writeSetup(MySetup);
 
-            }
-            catch (Exception Exp)
+            } catch (Exception Exp)
             {
 
                 // --> Qualcosa è andato storto, registro l'eccezione
