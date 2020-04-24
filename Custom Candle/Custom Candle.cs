@@ -1,5 +1,8 @@
 ﻿/*  CTRADER GURU --> Template 1.0.4
 
+Changelog (Armando Brecciaroli):
+v.1.0.5 (April 20, 2020) Add ON/OFF alert
+
     Homepage    : https://ctrader.guru/
     Telegram    : https://t.me/ctraderguru
     Twitter     : https://twitter.com/cTraderGURU/
@@ -71,6 +74,12 @@ namespace cAlgo
         /// </summary>
         [Parameter("Candle TimeFrame", Group = "Params", DefaultValue = 8, Step = 1)]
         public TimeFrame CandleTimeFrame { get; set; }
+
+/// ABRE <summary>
+/// Scegliere se visualizzare l'alert oppure no
+/// ABRE </summary>
+[Parameter("View ALERT", Group = "Params", DefaultValue = true)]
+public bool imp_ViewAlert { get; set; }
 
         /// <summary>
         /// Il numero di giorni da visualizzare
@@ -144,6 +153,11 @@ namespace cAlgo
 
             // --> Se il timeframe è superiore o uguale al corrente devo uscire
             if (TimeFrame >= CandleTimeFrame)
+/// ABRE <summary>
+/// Se abilitato appare l'alert
+/// ABRE </summary>
+if (imp_ViewAlert == true)
+
                 Chart.DrawStaticText("Alert", string.Format("{0} : USE THIS INDICATOR ON TIMEFRAME LOWER {1}", NAME.ToUpper(), CandleTimeFrame.ToString().ToUpper()), VerticalAlignment.Center, HorizontalAlignment.Center, Color.Red);
 
             // --> Stampo nei log la versione corrente
@@ -354,10 +368,10 @@ namespace cAlgo
                 return;
 
             // --> Organizzo i dati per la richiesta degli aggiornamenti
-            Guru.API.RequestProductInfo Request = new Guru.API.RequestProductInfo 
+            Guru.API.RequestProductInfo Request = new Guru.API.RequestProductInfo
             {
 
-                MyProduct = new Guru.Product 
+                MyProduct = new Guru.Product
                 {
 
                     ID = ID,
