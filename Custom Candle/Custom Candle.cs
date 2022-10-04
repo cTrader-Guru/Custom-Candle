@@ -10,6 +10,7 @@
 */
 
 using System;
+using System.Collections.Generic;
 using cAlgo.API;
 
 namespace cAlgo
@@ -33,7 +34,7 @@ namespace cAlgo
 
         public const string NAME = "Custom Candle";
 
-        public const string VERSION = "1.0.2";
+        public const string VERSION = "1.0.3";
 
         #endregion
 
@@ -47,6 +48,9 @@ namespace cAlgo
 
         [Parameter("Candle Mode", Group = "Params", DefaultValue = CandleMode.HighLow)]
         public CandleMode MyCandleMode { get; set; }
+
+        [Parameter("Fibonacci (high/low)", Group = "Params", DefaultValue = true)]
+        public bool ShowFibo { get; set; }
 
         [Parameter("Candles To Show", Group = "Params", DefaultValue = 10, MinValue = 1, Step = 1)]
         public int CandleShow { get; set; }
@@ -76,7 +80,18 @@ namespace cAlgo
 
         #region Property
 
+        readonly double[] DefaultFiboLevels = new[]
+        {
 
+            0.0,
+            23.6,
+            38.2,
+            50.0,
+            61.8,
+            76.4,
+            100.0
+
+        };
 
         #endregion
 
@@ -107,9 +122,10 @@ namespace cAlgo
             try
             {
 
-                DrawLevelFromCustomBar();
+                DrawLevelFromCustomBar(index);
 
-            } catch (Exception exp)
+            }
+            catch (Exception exp)
             {
 
                 Chart.DrawStaticText("Alert", string.Format("{0} : error, {1}", NAME, exp), VerticalAlignment.Center, HorizontalAlignment.Center, Color.Red);
@@ -123,7 +139,7 @@ namespace cAlgo
 
         #region Private Methods
 
-        private void DrawLevelFromCustomBar()
+        private void DrawLevelFromCustomBar(int realindex = 0)
         {
 
             Bars BarsCustom = MarketData.GetBars(CandleTimeFrame);
@@ -166,6 +182,35 @@ namespace cAlgo
 
                             }
 
+
+                            if (ShowFibo)
+                            {
+
+                                string Fiboname = "Fibo-" + (index - i);
+                                string Labelname = "Label-" + (index - i);
+
+                                if (BarsCustom[index - i].Open != BarsCustom[index - i].Close)
+                                {
+
+                                    double point1 = (BarsCustom[index - i].Open > BarsCustom[index - i].Close) ? BarsCustom[index - i].High : BarsCustom[index - i].Low;
+                                    double point2 = (BarsCustom[index - i].Open > BarsCustom[index - i].Close) ? BarsCustom[index - i].Low : BarsCustom[index - i].High;
+
+                                    ChartFibonacciRetracement MyFibo = Chart.DrawFibonacciRetracement(Fiboname, thisCandle, point1, thisCandle, point2, Color.FromArgb(Opacity, Color.FromName(RangeColor)), TicknessBox, LineStyleBox);
+                                    MyFibo.DisplayPrices = false;
+                                    MyFibo.IsInteractive = false;
+
+                                    SetDefaultFiboLevels(MyFibo.FibonacciLevels);
+
+                                }
+                                else
+                                {
+
+                                    Chart.RemoveObject(Fiboname);
+
+                                }
+
+                            }
+
                             break;
 
                         case CandleMode.OpenClose:
@@ -190,11 +235,39 @@ namespace cAlgo
 
                     }
 
-                } catch
+                }
+                catch
                 {
 
 
                 }
+
+            }
+
+        }
+        private void SetDefaultFiboLevels(IEnumerable<FibonacciLevel> levels)
+        {
+
+            int count = 0;
+
+            foreach (var level in levels)
+            {
+
+                if (DefaultFiboLevels.Length >= count + 1)
+                {
+
+                    level.PercentLevel = DefaultFiboLevels[count];
+                    level.IsVisible = true;
+
+                }
+                else
+                {
+
+                    level.IsVisible = false;
+
+                }
+
+                count++;
 
             }
 
