@@ -1,4 +1,4 @@
-﻿/*  CTRADER GURU --> Template 1.0.6
+/*  CTRADER GURU --> Template 1.0.6
 
     Homepage    : https://ctrader.guru/
     Telegram    : https://t.me/ctraderguru
@@ -16,7 +16,7 @@ using cAlgo.API;
 namespace cAlgo
 {
 
-    [Indicator(IsOverlay = true, TimeZone = TimeZones.UTC, AccessRights = AccessRights.None)]
+    [Indicator(IsOverlay = true, TimeZone = TimeZones.UTC, AccessRights = AccessRights.FullAccess)]
     public class CustomCandle : Indicator
     {
 
@@ -34,7 +34,7 @@ namespace cAlgo
 
         public const string NAME = "Custom Candle";
 
-        public const string VERSION = "1.0.3";
+        public const string VERSION = "1.0.4";
 
         #endregion
 
@@ -195,7 +195,7 @@ namespace cAlgo
                                     double point1 = (BarsCustom[index - i].Open > BarsCustom[index - i].Close) ? BarsCustom[index - i].High : BarsCustom[index - i].Low;
                                     double point2 = (BarsCustom[index - i].Open > BarsCustom[index - i].Close) ? BarsCustom[index - i].Low : BarsCustom[index - i].High;
 
-                                    ChartFibonacciRetracement MyFibo = Chart.DrawFibonacciRetracement(Fiboname, thisCandle, point1, thisCandle, point2, Color.FromArgb(Opacity, Color.FromName(RangeColor)), TicknessBox, LineStyleBox);
+                                    ChartFibonacciRetracement MyFibo = Chart.DrawFibonacciRetracement(Fiboname, nextCandle, point1, nextCandle, point2, Color.FromArgb(Opacity, Color.FromName(RangeColor)), TicknessBox, LineStyleBox);
                                     MyFibo.DisplayPrices = false;
                                     MyFibo.IsInteractive = false;
 
