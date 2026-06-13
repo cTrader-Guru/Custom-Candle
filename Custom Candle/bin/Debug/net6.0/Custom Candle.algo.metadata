@@ -9,8 +9,11 @@
     "AssemblyName": "Custom Candle, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
     "TimeZone": "UTC",
     "IsOverlay": true,
+    "IsPercentage": false,
     "ScalePrecision": null,
     "Levels": [],
+    "DefaultSymbolName": null,
+    "DefaultTimeFrame": null,
     "Video": null,
     "Lines": [],
     "Clouds": [],
@@ -20,14 +23,18 @@
         "ParameterType": "String",
         "PropertyName": "ProductInfo",
         "FriendlyName": "Custom Candle 1.0.4",
-        "GroupName": "Identity"
+        "GroupName": "Identity",
+        "IsValueVisibleInTitle": true,
+        "Description": ""
       },
       {
-        "DefaultValue": "h1",
+        "DefaultValue": "D1",
         "ParameterType": "TimeFrame",
         "PropertyName": "CandleTimeFrame",
         "FriendlyName": "Candle TimeFrame",
-        "GroupName": "Params"
+        "GroupName": "Params",
+        "IsValueVisibleInTitle": true,
+        "Description": ""
       },
       {
         "EnumValues": {
@@ -38,14 +45,18 @@
         "ParameterType": "Enum",
         "PropertyName": "MyCandleMode",
         "FriendlyName": "Candle Mode",
-        "GroupName": "Params"
+        "GroupName": "Params",
+        "IsValueVisibleInTitle": true,
+        "Description": ""
       },
       {
         "DefaultValue": true,
         "ParameterType": "Boolean",
         "PropertyName": "ShowFibo",
         "FriendlyName": "Fibonacci (high/low)",
-        "GroupName": "Params"
+        "GroupName": "Params",
+        "IsValueVisibleInTitle": true,
+        "Description": ""
       },
       {
         "MinValue": 1,
@@ -55,7 +66,9 @@
         "ParameterType": "Integer",
         "PropertyName": "CandleShow",
         "FriendlyName": "Candles To Show",
-        "GroupName": "Params"
+        "GroupName": "Params",
+        "IsValueVisibleInTitle": true,
+        "Description": ""
       },
       {
         "EnumValues": {
@@ -70,7 +83,9 @@
         "ParameterType": "Enum",
         "PropertyName": "LineStyleBox",
         "FriendlyName": "Line Style Box",
-        "GroupName": "Styles"
+        "GroupName": "Styles",
+        "IsValueVisibleInTitle": true,
+        "Description": ""
       },
       {
         "MinValue": 1,
@@ -80,21 +95,27 @@
         "ParameterType": "Integer",
         "PropertyName": "TicknessBox",
         "FriendlyName": "Tickness",
-        "GroupName": "Styles"
+        "GroupName": "Styles",
+        "IsValueVisibleInTitle": true,
+        "Description": ""
       },
       {
-        "DefaultValue": "DodgerBlue",
-        "ParameterType": "String",
+        "DefaultValue": "#1E90FFFF",
+        "ParameterType": "Color",
         "PropertyName": "ColorHigh",
         "FriendlyName": "High/Open/Long Color",
-        "GroupName": "Styles"
+        "GroupName": "Styles",
+        "IsValueVisibleInTitle": false,
+        "Description": ""
       },
       {
-        "DefaultValue": "Red",
-        "ParameterType": "String",
+        "DefaultValue": "#FF0000FF",
+        "ParameterType": "Color",
         "PropertyName": "ColorLow",
         "FriendlyName": "Low/Close/Short Color",
-        "GroupName": "Styles"
+        "GroupName": "Styles",
+        "IsValueVisibleInTitle": false,
+        "Description": ""
       },
       {
         "MinValue": 1,
@@ -104,29 +125,76 @@
         "ParameterType": "Integer",
         "PropertyName": "Opacity",
         "FriendlyName": "Opacity",
-        "GroupName": "Styles"
+        "GroupName": "Styles",
+        "IsValueVisibleInTitle": true,
+        "Description": ""
       },
       {
         "DefaultValue": true,
         "ParameterType": "Boolean",
         "PropertyName": "Boxed",
         "FriendlyName": "Boxed ?",
-        "GroupName": "Styles"
+        "GroupName": "Styles",
+        "IsValueVisibleInTitle": true,
+        "Description": ""
       },
       {
         "DefaultValue": true,
         "ParameterType": "Boolean",
         "PropertyName": "FillBox",
         "FriendlyName": "Fill Box ?",
-        "GroupName": "Styles"
-      }
-    ],
-    "Capabilities": [
+        "GroupName": "Styles",
+        "IsValueVisibleInTitle": true,
+        "Description": ""
+      },
       {
-        "CapabilityType": "FullTrust"
+        "DefaultValue": false,
+        "ParameterType": "Boolean",
+        "PropertyName": "EnableAsiaCage",
+        "FriendlyName": "Enable Asia Cage",
+        "GroupName": "Asia Cage",
+        "IsValueVisibleInTitle": true,
+        "Description": ""
+      },
+      {
+        "MinValue": -1.7976931348623157E+308,
+        "MaxValue": 1.7976931348623157E+308,
+        "Step": 0.1,
+        "DefaultValue": 0.0,
+        "ParameterType": "Double",
+        "PropertyName": "AsiaCageStart",
+        "FriendlyName": "Cage Start (UTC 0)",
+        "GroupName": "Asia Cage",
+        "IsValueVisibleInTitle": true,
+        "Description": ""
+      },
+      {
+        "MinValue": -1.7976931348623157E+308,
+        "MaxValue": 1.7976931348623157E+308,
+        "Step": 0.1,
+        "DefaultValue": 6.0,
+        "ParameterType": "Double",
+        "PropertyName": "AsiaCageEnd",
+        "FriendlyName": "Cage End (UTC 0)",
+        "GroupName": "Asia Cage",
+        "IsValueVisibleInTitle": true,
+        "Description": ""
+      },
+      {
+        "DefaultValue": "#FFFF00FF",
+        "ParameterType": "Color",
+        "PropertyName": "AsiaCageColor",
+        "FriendlyName": "Asia Cage Color",
+        "GroupName": "Asia Cage",
+        "IsValueVisibleInTitle": false,
+        "Description": ""
       }
     ],
+    "Capabilities": [],
     "CustomAttributes": [],
-    "Sets": []
+    "Sets": [],
+    "AddIndicatorsToChart": false,
+    "AdditionalInfoUrl": null,
+    "Bars": []
   }
 ]
