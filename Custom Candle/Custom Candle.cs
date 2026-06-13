@@ -43,16 +43,16 @@ namespace cAlgo
         [Parameter(NAME + " " + VERSION, Group = "Identity", DefaultValue = "https://www.google.com/search?q=ctrader+guru+custom+candle")]
         public string ProductInfo { get; set; }
 
-        [Parameter("Candle TimeFrame", Group = "Params", DefaultValue = 8, Step = 1)]
+        [Parameter("Candle TimeFrame", Group = "Params", DefaultValue = "Daily")]
         public TimeFrame CandleTimeFrame { get; set; }
 
         [Parameter("Candle Mode", Group = "Params", DefaultValue = CandleMode.HighLow)]
         public CandleMode MyCandleMode { get; set; }
 
-        [Parameter("Fibonacci (high/low)", Group = "Params", DefaultValue = true)]
+        [Parameter("Fibonacci (high/low)", Group = "Params", DefaultValue = false)]
         public bool ShowFibo { get; set; }
 
-        [Parameter("Candles To Show", Group = "Params", DefaultValue = 10, MinValue = 1, Step = 1)]
+        [Parameter("Candle To Show (zero = unlimited)", Group = "Params", DefaultValue = 10, MinValue = 0, Step = 1)]
         public int CandleShow { get; set; }
 
         [Parameter("Line Style Box", Group = "Styles", DefaultValue = LineStyle.Solid)]
@@ -62,10 +62,10 @@ namespace cAlgo
         public int TicknessBox { get; set; }
 
         [Parameter("High/Open/Long Color", Group = "Styles", DefaultValue = "DodgerBlue")]
-        public string ColorHigh { get; set; }
+        public Color ColorHigh { get; set; }
 
         [Parameter("Low/Close/Short Color", Group = "Styles", DefaultValue = "Red")]
-        public string ColorLow { get; set; }
+        public Color ColorLow { get; set; }
 
         [Parameter("Opacity", Group = "Styles", DefaultValue = 30, MinValue = 1, MaxValue = 100, Step = 1)]
         public int Opacity { get; set; }
@@ -75,6 +75,33 @@ namespace cAlgo
 
         [Parameter("Fill Box ?", Group = "Styles", DefaultValue = true)]
         public bool FillBox { get; set; }
+
+        [Parameter("Enable", Group = "Cage", DefaultValue = true)]
+        public bool EnableAsiaCage { get; set; }
+
+        [Parameter("Start (UTC 0)", Group = "Cage", DefaultValue = 0.00)]
+        public double AsiaCageStart { get; set; }
+
+        [Parameter("End (UTC 0)", Group = "Cage", DefaultValue = 6.00)]
+        public double AsiaCageEnd { get; set; }
+
+        [Parameter("Color", Group = "Cage", DefaultValue = "Yellow")]
+        public Color AsiaCageColor { get; set; }
+
+        [Parameter("Opacity", Group = "Cage", DefaultValue = 30, MinValue = 1, MaxValue = 100, Step = 1)]
+        public int AsiaCageOpacity { get; set; }
+
+        [Parameter("Draw Levels", Group = "Cage", DefaultValue = true)]
+        public bool DrawCageLevels { get; set; }
+
+        [Parameter("Levels Line Style", Group = "Cage", DefaultValue = LineStyle.DotsVeryRare)]
+        public LineStyle LineStyleCageLevels { get; set; }
+
+        [Parameter("Levels Tickness", Group = "Cage", DefaultValue = 1, MaxValue = 5, MinValue = 1, Step = 1)]
+        public int TicknessCageLevels { get; set; }
+
+        [Parameter("Levels Color", Group = "Cage", DefaultValue = "#3CFFFF00")]
+        public Color CageLevelsColor { get; set; }
 
         #endregion
 
@@ -93,20 +120,25 @@ namespace cAlgo
 
         };
 
+        bool DrawAsiaCageEnabled;
+
         #endregion
 
         #region Indicator Events
 
         protected override void Initialize()
         {
-           
+
             Print("{0} : {1}", NAME, VERSION);
 
-            if (Color.FromName(ColorHigh).ToArgb() == 0)
-                ColorHigh = "DodgerBlue";
+            DrawAsiaCageEnabled = EnableAsiaCage && CandleTimeFrame == TimeFrame.Daily;
 
-            if (Color.FromName(ColorLow).ToArgb() == 0)
-                ColorLow = "Red";
+            if (EnableAsiaCage && CandleTimeFrame != TimeFrame.Daily)
+            {
+
+                MessageBox.Show(string.Format("{0} : Asia Cage is only supported when 'Candle TimeFrame' is set to Daily (Day2, Weekly and other time frames are not supported). The cage will not be drawn.", NAME), NAME, MessageBoxButton.OK, MessageBoxImage.Warning);
+
+            }
 
         }
 
@@ -143,10 +175,12 @@ namespace cAlgo
 
             int index = BarsCustom.Count - 1;
 
-            if (index < CandleShow || index < 1)
+            if (index < 1 || (CandleShow > 0 && index < CandleShow))
                 return;
 
-            for (int i = 0; i < CandleShow; i++)
+            int candleCount = (CandleShow == 0) ? index + 1 : CandleShow;
+
+            for (int i = 0; i < candleCount; i++)
             {
 
                 try
@@ -156,7 +190,10 @@ namespace cAlgo
                     DateTime nextCandle = (i == 0) ? thisCandle.AddMinutes(GetTimeFrameCandleInMinutes(CandleTimeFrame)) : BarsCustom[index - i + 1].OpenTime;
 
                     string rangeFlag = thisCandle.ToString();
-                    string RangeColor = (BarsCustom[index - i].Close > BarsCustom[index - i].Open) ? ColorHigh : ColorLow;
+                    Color RangeColor = (BarsCustom[index - i].Close > BarsCustom[index - i].Open) ? ColorHigh : ColorLow;
+
+                    if (DrawAsiaCageEnabled)
+                        DrawAsiaCage(thisCandle, rangeFlag);
 
                     switch (MyCandleMode)
                     {
@@ -166,7 +203,7 @@ namespace cAlgo
                             if (Boxed)
                             {
 
-                                ChartRectangle MyBox = Chart.DrawRectangle("HighLow" + rangeFlag, thisCandle, BarsCustom[index - i].High, nextCandle, BarsCustom[index - i].Low, Color.FromArgb(Opacity, Color.FromName(RangeColor)), TicknessBox, LineStyleBox);
+                                ChartRectangle MyBox = Chart.DrawRectangle("HighLow" + rangeFlag, thisCandle, BarsCustom[index - i].High, nextCandle, BarsCustom[index - i].Low, Color.FromArgb(Opacity, RangeColor), TicknessBox, LineStyleBox);
 
                                 MyBox.IsFilled = FillBox;
 
@@ -174,8 +211,8 @@ namespace cAlgo
                             else
                             {
 
-                                Chart.DrawTrendLine("High" + rangeFlag, thisCandle, BarsCustom[index - i].High, nextCandle, BarsCustom[index - i].High, Color.FromName(ColorHigh), TicknessBox, LineStyleBox);
-                                Chart.DrawTrendLine("Low" + rangeFlag, thisCandle, BarsCustom[index - i].Low, nextCandle, BarsCustom[index - i].Low, Color.FromName(ColorLow), TicknessBox, LineStyleBox);
+                                Chart.DrawTrendLine("High" + rangeFlag, thisCandle, BarsCustom[index - i].High, nextCandle, BarsCustom[index - i].High, ColorHigh, TicknessBox, LineStyleBox);
+                                Chart.DrawTrendLine("Low" + rangeFlag, thisCandle, BarsCustom[index - i].Low, nextCandle, BarsCustom[index - i].Low, ColorLow, TicknessBox, LineStyleBox);
 
                             }
 
@@ -192,7 +229,7 @@ namespace cAlgo
                                     double point1 = (BarsCustom[index - i].Open > BarsCustom[index - i].Close) ? BarsCustom[index - i].High : BarsCustom[index - i].Low;
                                     double point2 = (BarsCustom[index - i].Open > BarsCustom[index - i].Close) ? BarsCustom[index - i].Low : BarsCustom[index - i].High;
 
-                                    ChartFibonacciRetracement MyFibo = Chart.DrawFibonacciRetracement(Fiboname, nextCandle, point1, nextCandle, point2, Color.FromArgb(Opacity, Color.FromName(RangeColor)), TicknessBox, LineStyleBox);
+                                    ChartFibonacciRetracement MyFibo = Chart.DrawFibonacciRetracement(Fiboname, nextCandle, point1, nextCandle, point2, Color.FromArgb(Opacity, RangeColor), TicknessBox, LineStyleBox);
                                     MyFibo.DisplayPrices = false;
                                     MyFibo.IsInteractive = false;
 
@@ -215,7 +252,7 @@ namespace cAlgo
                             if (Boxed)
                             {
 
-                                ChartRectangle MyBox = Chart.DrawRectangle("OpenClose" + rangeFlag, thisCandle, BarsCustom[index - i].Open, nextCandle, BarsCustom[index - i].Close, Color.FromArgb(Opacity, Color.FromName(RangeColor)), TicknessBox, LineStyleBox);
+                                ChartRectangle MyBox = Chart.DrawRectangle("OpenClose" + rangeFlag, thisCandle, BarsCustom[index - i].Open, nextCandle, BarsCustom[index - i].Close, Color.FromArgb(Opacity, RangeColor), TicknessBox, LineStyleBox);
 
                                 MyBox.IsFilled = FillBox;
 
@@ -223,8 +260,8 @@ namespace cAlgo
                             else
                             {
 
-                                Chart.DrawTrendLine("Open" + rangeFlag, thisCandle, BarsCustom[index - i].Open, nextCandle, BarsCustom[index - i].Open, Color.FromName(ColorHigh), TicknessBox, LineStyleBox);
-                                Chart.DrawTrendLine("Close" + rangeFlag, thisCandle, BarsCustom[index - i].Close, nextCandle, BarsCustom[index - i].Close, Color.FromName(ColorLow), TicknessBox, LineStyleBox);
+                                Chart.DrawTrendLine("Open" + rangeFlag, thisCandle, BarsCustom[index - i].Open, nextCandle, BarsCustom[index - i].Open, ColorHigh, TicknessBox, LineStyleBox);
+                                Chart.DrawTrendLine("Close" + rangeFlag, thisCandle, BarsCustom[index - i].Close, nextCandle, BarsCustom[index - i].Close, ColorLow, TicknessBox, LineStyleBox);
 
                             }
 
@@ -242,6 +279,102 @@ namespace cAlgo
             }
 
         }
+        private void DrawAsiaCage(DateTime dayStart, string rangeFlag)
+        {
+
+            DateTime dayDate = dayStart.AddHours(12).Date;
+
+            DateTime dayEnd = dayStart.AddMinutes(GetTimeFrameCandleInMinutes(CandleTimeFrame));
+
+            DateTime cageStart = dayDate + ParseTimeValue(AsiaCageStart);
+            DateTime cageEnd = dayDate + ParseTimeValue(AsiaCageEnd);
+
+            if (cageEnd <= cageStart)
+                cageEnd = cageEnd.AddDays(1);
+
+            double? cageHigh = null;
+            double? cageLow = null;
+
+            int barIndex = Bars.OpenTimes.GetIndexByTime(cageStart);
+
+            if (barIndex < 0)
+                barIndex = 0;
+
+            for (int b = barIndex; b < Bars.Count; b++)
+            {
+
+                DateTime barTime = Bars[b].OpenTime;
+
+                if (barTime >= cageEnd)
+                    break;
+
+                if (barTime < cageStart)
+                    continue;
+
+                if (cageHigh == null || Bars[b].High > cageHigh)
+                    cageHigh = Bars[b].High;
+
+                if (cageLow == null || Bars[b].Low < cageLow)
+                    cageLow = Bars[b].Low;
+
+            }
+
+            string cageName = "AsiaCage" + rangeFlag;
+            string highLevelName = "AsiaCageHighLevel" + rangeFlag;
+            string lowLevelName = "AsiaCageLowLevel" + rangeFlag;
+
+            if (cageHigh == null || cageLow == null)
+            {
+
+                Chart.RemoveObject(cageName);
+                Chart.RemoveObject(highLevelName);
+                Chart.RemoveObject(lowLevelName);
+                return;
+
+            }
+
+            ChartRectangle CageBox = Chart.DrawRectangle(cageName, cageStart, cageHigh.Value, cageEnd, cageLow.Value, Color.FromArgb(AsiaCageOpacity, AsiaCageColor), TicknessBox, LineStyleBox);
+
+            CageBox.IsFilled = FillBox;
+
+            if (DrawCageLevels)
+            {
+
+                ChartTrendLine HighLevelLine = Chart.DrawTrendLine(highLevelName, cageStart, cageHigh.Value, dayEnd, cageHigh.Value, CageLevelsColor, TicknessCageLevels, LineStyleCageLevels);
+                ChartTrendLine LowLevelLine = Chart.DrawTrendLine(lowLevelName, cageStart, cageLow.Value, dayEnd, cageLow.Value, CageLevelsColor, TicknessCageLevels, LineStyleCageLevels);
+
+                HighLevelLine.ExtendToInfinity = false;
+                LowLevelLine.ExtendToInfinity = false;
+
+            }
+            else
+            {
+
+                Chart.RemoveObject(highLevelName);
+                Chart.RemoveObject(lowLevelName);
+
+            }
+
+        }
+
+        private TimeSpan ParseTimeValue(double value)
+        {
+
+            int hours = (int)Math.Floor(value);
+            int minutes = (int)Math.Round((value - hours) * 100);
+
+            if (minutes >= 60)
+            {
+
+                hours += 1;
+                minutes -= 60;
+
+            }
+
+            return new TimeSpan(hours, minutes, 0);
+
+        }
+
         private void SetDefaultFiboLevels(IEnumerable<FibonacciLevel> levels)
         {
 
@@ -253,7 +386,7 @@ namespace cAlgo
                 if (DefaultFiboLevels.Length >= count + 1)
                 {
 
-                    level.PercentLevel = DefaultFiboLevels[count];
+                    level.Percent = DefaultFiboLevels[count];
                     level.IsVisible = true;
 
                 }
