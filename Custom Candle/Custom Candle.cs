@@ -52,7 +52,7 @@ namespace cAlgo
         [Parameter("Fibonacci (high/low)", Group = "Params", DefaultValue = true)]
         public bool ShowFibo { get; set; }
 
-        [Parameter("Candles To Show", Group = "Params", DefaultValue = 10, MinValue = 1, Step = 1)]
+        [Parameter("Candle To Show (zero = unlimited)", Group = "Params", DefaultValue = 0, MinValue = 0, Step = 1)]
         public int CandleShow { get; set; }
 
         [Parameter("Line Style Box", Group = "Styles", DefaultValue = LineStyle.Solid)]
@@ -87,6 +87,18 @@ namespace cAlgo
 
         [Parameter("Asia Cage Color", Group = "Asia Cage", DefaultValue = "Yellow")]
         public Color AsiaCageColor { get; set; }
+
+        [Parameter("Draw Levels", Group = "Asia Cage", DefaultValue = false)]
+        public bool DrawCageLevels { get; set; }
+
+        [Parameter("Levels Line Style", Group = "Asia Cage", DefaultValue = LineStyle.Solid)]
+        public LineStyle LineStyleCageLevels { get; set; }
+
+        [Parameter("Levels Tickness", Group = "Asia Cage", DefaultValue = 1, MaxValue = 5, MinValue = 1, Step = 1)]
+        public int TicknessCageLevels { get; set; }
+
+        [Parameter("Levels Color", Group = "Asia Cage", DefaultValue = "Yellow")]
+        public Color CageLevelsColor { get; set; }
 
         #endregion
 
@@ -160,10 +172,12 @@ namespace cAlgo
 
             int index = BarsCustom.Count - 1;
 
-            if (index < CandleShow || index < 1)
+            if (index < 1 || (CandleShow > 0 && index < CandleShow))
                 return;
 
-            for (int i = 0; i < CandleShow; i++)
+            int candleCount = (CandleShow == 0) ? index + 1 : CandleShow;
+
+            for (int i = 0; i < candleCount; i++)
             {
 
                 try
@@ -265,6 +279,8 @@ namespace cAlgo
         private void DrawAsiaCage(DateTime dayStart, string rangeFlag)
         {
 
+            DateTime dayEnd = dayStart;
+
             DateTime cageStart = dayStart.Date + ParseTimeValue(AsiaCageStart);
             DateTime cageEnd = dayStart.Date + ParseTimeValue(AsiaCageEnd);
 
@@ -299,11 +315,15 @@ namespace cAlgo
             }
 
             string cageName = "AsiaCage" + rangeFlag;
+            string highLevelName = "AsiaCageHighLevel" + rangeFlag;
+            string lowLevelName = "AsiaCageLowLevel" + rangeFlag;
 
             if (cageHigh == null || cageLow == null)
             {
 
                 Chart.RemoveObject(cageName);
+                Chart.RemoveObject(highLevelName);
+                Chart.RemoveObject(lowLevelName);
                 return;
 
             }
@@ -311,6 +331,24 @@ namespace cAlgo
             ChartRectangle CageBox = Chart.DrawRectangle(cageName, cageStart, cageHigh.Value, cageEnd, cageLow.Value, Color.FromArgb(Opacity, AsiaCageColor), TicknessBox, LineStyleBox);
 
             CageBox.IsFilled = FillBox;
+
+            if (DrawCageLevels)
+            {
+
+                ChartTrendLine HighLevelLine = Chart.DrawTrendLine(highLevelName, cageStart, cageHigh.Value, dayEnd, cageHigh.Value, CageLevelsColor, TicknessCageLevels, LineStyleCageLevels);
+                ChartTrendLine LowLevelLine = Chart.DrawTrendLine(lowLevelName, cageStart, cageLow.Value, dayEnd, cageLow.Value, CageLevelsColor, TicknessCageLevels, LineStyleCageLevels);
+
+                HighLevelLine.ExtendToInfinity = false;
+                LowLevelLine.ExtendToInfinity = false;
+
+            }
+            else
+            {
+
+                Chart.RemoveObject(highLevelName);
+                Chart.RemoveObject(lowLevelName);
+
+            }
 
         }
 
@@ -343,7 +381,7 @@ namespace cAlgo
                 if (DefaultFiboLevels.Length >= count + 1)
                 {
 
-                    level.PercentLevel = DefaultFiboLevels[count];
+                    level.Percent = DefaultFiboLevels[count];
                     level.IsVisible = true;
 
                 }

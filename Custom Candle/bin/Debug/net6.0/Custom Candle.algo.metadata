@@ -59,13 +59,13 @@
         "Description": ""
       },
       {
-        "MinValue": 1,
+        "MinValue": 0,
         "MaxValue": 2147483647,
         "Step": 1,
-        "DefaultValue": 10,
+        "DefaultValue": 0,
         "ParameterType": "Integer",
         "PropertyName": "CandleShow",
-        "FriendlyName": "Candles To Show",
+        "FriendlyName": "Candle To Show (zero = unlimited)",
         "GroupName": "Params",
         "IsValueVisibleInTitle": true,
         "Description": ""
@@ -185,6 +185,53 @@
         "ParameterType": "Color",
         "PropertyName": "AsiaCageColor",
         "FriendlyName": "Asia Cage Color",
+        "GroupName": "Asia Cage",
+        "IsValueVisibleInTitle": false,
+        "Description": ""
+      },
+      {
+        "DefaultValue": false,
+        "ParameterType": "Boolean",
+        "PropertyName": "DrawCageLevels",
+        "FriendlyName": "Draw Levels",
+        "GroupName": "Asia Cage",
+        "IsValueVisibleInTitle": true,
+        "Description": ""
+      },
+      {
+        "EnumValues": {
+          "Solid": 0,
+          "Dots": 1,
+          "DotsRare": 2,
+          "DotsVeryRare": 3,
+          "LinesDots": 4,
+          "Lines": 5
+        },
+        "DefaultValue": 0,
+        "ParameterType": "Enum",
+        "PropertyName": "LineStyleCageLevels",
+        "FriendlyName": "Levels Line Style",
+        "GroupName": "Asia Cage",
+        "IsValueVisibleInTitle": true,
+        "Description": ""
+      },
+      {
+        "MinValue": 1,
+        "MaxValue": 5,
+        "Step": 1,
+        "DefaultValue": 1,
+        "ParameterType": "Integer",
+        "PropertyName": "TicknessCageLevels",
+        "FriendlyName": "Levels Tickness",
+        "GroupName": "Asia Cage",
+        "IsValueVisibleInTitle": true,
+        "Description": ""
+      },
+      {
+        "DefaultValue": "#FFFF00FF",
+        "ParameterType": "Color",
+        "PropertyName": "CageLevelsColor",
+        "FriendlyName": "Levels Color",
         "GroupName": "Asia Cage",
         "IsValueVisibleInTitle": false,
         "Description": ""
