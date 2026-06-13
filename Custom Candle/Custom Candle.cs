@@ -49,10 +49,10 @@ namespace cAlgo
         [Parameter("Candle Mode", Group = "Params", DefaultValue = CandleMode.HighLow)]
         public CandleMode MyCandleMode { get; set; }
 
-        [Parameter("Fibonacci (high/low)", Group = "Params", DefaultValue = true)]
+        [Parameter("Fibonacci (high/low)", Group = "Params", DefaultValue = false)]
         public bool ShowFibo { get; set; }
 
-        [Parameter("Candle To Show (zero = unlimited)", Group = "Params", DefaultValue = 0, MinValue = 0, Step = 1)]
+        [Parameter("Candle To Show (zero = unlimited)", Group = "Params", DefaultValue = 10, MinValue = 0, Step = 1)]
         public int CandleShow { get; set; }
 
         [Parameter("Line Style Box", Group = "Styles", DefaultValue = LineStyle.Solid)]
@@ -76,28 +76,31 @@ namespace cAlgo
         [Parameter("Fill Box ?", Group = "Styles", DefaultValue = true)]
         public bool FillBox { get; set; }
 
-        [Parameter("Enable Asia Cage", Group = "Asia Cage", DefaultValue = false)]
+        [Parameter("Enable", Group = "Cage", DefaultValue = true)]
         public bool EnableAsiaCage { get; set; }
 
-        [Parameter("Cage Start (UTC 0)", Group = "Asia Cage", DefaultValue = 0.00)]
+        [Parameter("Start (UTC 0)", Group = "Cage", DefaultValue = 0.00)]
         public double AsiaCageStart { get; set; }
 
-        [Parameter("Cage End (UTC 0)", Group = "Asia Cage", DefaultValue = 6.00)]
+        [Parameter("End (UTC 0)", Group = "Cage", DefaultValue = 6.00)]
         public double AsiaCageEnd { get; set; }
 
-        [Parameter("Asia Cage Color", Group = "Asia Cage", DefaultValue = "Yellow")]
+        [Parameter("Color", Group = "Cage", DefaultValue = "Yellow")]
         public Color AsiaCageColor { get; set; }
 
-        [Parameter("Draw Levels", Group = "Asia Cage", DefaultValue = false)]
+        [Parameter("Opacity", Group = "Cage", DefaultValue = 30, MinValue = 1, MaxValue = 100, Step = 1)]
+        public int AsiaCageOpacity { get; set; }
+
+        [Parameter("Draw Levels", Group = "Cage", DefaultValue = true)]
         public bool DrawCageLevels { get; set; }
 
-        [Parameter("Levels Line Style", Group = "Asia Cage", DefaultValue = LineStyle.Solid)]
+        [Parameter("Levels Line Style", Group = "Cage", DefaultValue = LineStyle.DotsVeryRare)]
         public LineStyle LineStyleCageLevels { get; set; }
 
-        [Parameter("Levels Tickness", Group = "Asia Cage", DefaultValue = 1, MaxValue = 5, MinValue = 1, Step = 1)]
+        [Parameter("Levels Tickness", Group = "Cage", DefaultValue = 1, MaxValue = 5, MinValue = 1, Step = 1)]
         public int TicknessCageLevels { get; set; }
 
-        [Parameter("Levels Color", Group = "Asia Cage", DefaultValue = "Yellow")]
+        [Parameter("Levels Color", Group = "Cage", DefaultValue = "#3CFFFF00")]
         public Color CageLevelsColor { get; set; }
 
         #endregion
@@ -330,7 +333,7 @@ namespace cAlgo
 
             }
 
-            ChartRectangle CageBox = Chart.DrawRectangle(cageName, cageStart, cageHigh.Value, cageEnd, cageLow.Value, Color.FromArgb(Opacity, AsiaCageColor), TicknessBox, LineStyleBox);
+            ChartRectangle CageBox = Chart.DrawRectangle(cageName, cageStart, cageHigh.Value, cageEnd, cageLow.Value, Color.FromArgb(AsiaCageOpacity, AsiaCageColor), TicknessBox, LineStyleBox);
 
             CageBox.IsFilled = FillBox;
 

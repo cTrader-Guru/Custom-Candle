@@ -50,7 +50,7 @@
         "Description": ""
       },
       {
-        "DefaultValue": true,
+        "DefaultValue": false,
         "ParameterType": "Boolean",
         "PropertyName": "ShowFibo",
         "FriendlyName": "Fibonacci (high/low)",
@@ -62,7 +62,7 @@
         "MinValue": 0,
         "MaxValue": 2147483647,
         "Step": 1,
-        "DefaultValue": 0,
+        "DefaultValue": 10,
         "ParameterType": "Integer",
         "PropertyName": "CandleShow",
         "FriendlyName": "Candle To Show (zero = unlimited)",
@@ -148,11 +148,11 @@
         "Description": ""
       },
       {
-        "DefaultValue": false,
+        "DefaultValue": true,
         "ParameterType": "Boolean",
         "PropertyName": "EnableAsiaCage",
-        "FriendlyName": "Enable Asia Cage",
-        "GroupName": "Asia Cage",
+        "FriendlyName": "Enable",
+        "GroupName": "Cage",
         "IsValueVisibleInTitle": true,
         "Description": ""
       },
@@ -163,8 +163,8 @@
         "DefaultValue": 0.0,
         "ParameterType": "Double",
         "PropertyName": "AsiaCageStart",
-        "FriendlyName": "Cage Start (UTC 0)",
-        "GroupName": "Asia Cage",
+        "FriendlyName": "Start (UTC 0)",
+        "GroupName": "Cage",
         "IsValueVisibleInTitle": true,
         "Description": ""
       },
@@ -175,8 +175,8 @@
         "DefaultValue": 6.0,
         "ParameterType": "Double",
         "PropertyName": "AsiaCageEnd",
-        "FriendlyName": "Cage End (UTC 0)",
-        "GroupName": "Asia Cage",
+        "FriendlyName": "End (UTC 0)",
+        "GroupName": "Cage",
         "IsValueVisibleInTitle": true,
         "Description": ""
       },
@@ -184,17 +184,29 @@
         "DefaultValue": "#FFFF00FF",
         "ParameterType": "Color",
         "PropertyName": "AsiaCageColor",
-        "FriendlyName": "Asia Cage Color",
-        "GroupName": "Asia Cage",
+        "FriendlyName": "Color",
+        "GroupName": "Cage",
         "IsValueVisibleInTitle": false,
         "Description": ""
       },
       {
-        "DefaultValue": false,
+        "MinValue": 1,
+        "MaxValue": 100,
+        "Step": 1,
+        "DefaultValue": 30,
+        "ParameterType": "Integer",
+        "PropertyName": "AsiaCageOpacity",
+        "FriendlyName": "Opacity",
+        "GroupName": "Cage",
+        "IsValueVisibleInTitle": true,
+        "Description": ""
+      },
+      {
+        "DefaultValue": true,
         "ParameterType": "Boolean",
         "PropertyName": "DrawCageLevels",
         "FriendlyName": "Draw Levels",
-        "GroupName": "Asia Cage",
+        "GroupName": "Cage",
         "IsValueVisibleInTitle": true,
         "Description": ""
       },
@@ -207,11 +219,11 @@
           "LinesDots": 4,
           "Lines": 5
         },
-        "DefaultValue": 0,
+        "DefaultValue": 3,
         "ParameterType": "Enum",
         "PropertyName": "LineStyleCageLevels",
         "FriendlyName": "Levels Line Style",
-        "GroupName": "Asia Cage",
+        "GroupName": "Cage",
         "IsValueVisibleInTitle": true,
         "Description": ""
       },
@@ -223,16 +235,16 @@
         "ParameterType": "Integer",
         "PropertyName": "TicknessCageLevels",
         "FriendlyName": "Levels Tickness",
-        "GroupName": "Asia Cage",
+        "GroupName": "Cage",
         "IsValueVisibleInTitle": true,
         "Description": ""
       },
       {
-        "DefaultValue": "#FFFF00FF",
+        "DefaultValue": "#FFFF003C",
         "ParameterType": "Color",
         "PropertyName": "CageLevelsColor",
         "FriendlyName": "Levels Color",
-        "GroupName": "Asia Cage",
+        "GroupName": "Cage",
         "IsValueVisibleInTitle": false,
         "Description": ""
       }
