@@ -34,7 +34,7 @@ namespace cAlgo
 
         public const string NAME = "Custom Candle";
 
-        public const string VERSION = "1.0.4";
+        public const string VERSION = "1.0.7";
 
         #endregion
 
