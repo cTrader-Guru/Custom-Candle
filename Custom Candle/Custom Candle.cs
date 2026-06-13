@@ -279,10 +279,12 @@ namespace cAlgo
         private void DrawAsiaCage(DateTime dayStart, string rangeFlag)
         {
 
-            DateTime dayEnd = dayStart;
+            DateTime dayDate = dayStart.AddHours(12).Date;
 
-            DateTime cageStart = dayStart.Date + ParseTimeValue(AsiaCageStart);
-            DateTime cageEnd = dayStart.Date + ParseTimeValue(AsiaCageEnd);
+            DateTime dayEnd = dayStart.AddMinutes(GetTimeFrameCandleInMinutes(CandleTimeFrame));
+
+            DateTime cageStart = dayDate + ParseTimeValue(AsiaCageStart);
+            DateTime cageEnd = dayDate + ParseTimeValue(AsiaCageEnd);
 
             if (cageEnd <= cageStart)
                 cageEnd = cageEnd.AddDays(1);
