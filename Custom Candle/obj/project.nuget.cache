@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "GAn6qinLxVEP/BFcVykRM1vlJIvkU5NSwgaEOtIQqnei+pRDMBAbe0+siOtLBzMLo/dQplis/4pc2RayU5n4Sw==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\leona\\Documents\\cAlgo\\Sources\\Indicators\\Custom Candle\\Custom Candle\\Custom Candle.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\leona\\.nuget\\packages\\ctrader.automate\\1.0.8\\ctrader.automate.1.0.8.nupkg.sha512"
+  ],
+  "logs": []
+}
