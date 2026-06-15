@@ -1,4 +1,4 @@
-/*  CTRADER GURU --> Template 1.0.6
+/*  CTRADER GURU --> Template 1.0.9
 
     Homepage    : https://ctrader.guru/
     Telegram    : https://t.me/ctraderguru
@@ -34,7 +34,7 @@ namespace cAlgo
 
         public const string NAME = "Custom Candle";
 
-        public const string VERSION = "1.0.7";
+        public const string VERSION = "1.0.9";
 
         #endregion
 
