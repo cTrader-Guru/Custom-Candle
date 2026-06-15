@@ -360,7 +360,7 @@ namespace cAlgo
 
             }
 
-            if (DrawCageLevels && ShowCageMidSignal)
+            if (ShowCageMidSignal)
             {
 
                 double cageMid = (cageHigh.Value + cageLow.Value) / 2;
