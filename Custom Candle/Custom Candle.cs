@@ -79,11 +79,11 @@ namespace cAlgo
         [Parameter("Enable", Group = "Cage", DefaultValue = true)]
         public bool EnableAsiaCage { get; set; }
 
-        [Parameter("Start (UTC 0)", Group = "Cage", DefaultValue = 0.00)]
-        public double AsiaCageStart { get; set; }
+        [Parameter("Start (UTC 0)", Group = "Cage", MinValue = "00:00:00", MaxValue = "23:59:59", DefaultValue = "00:00:00")]
+        public TimeSpan AsiaCageStart { get; set; }
 
-        [Parameter("End (UTC 0)", Group = "Cage", DefaultValue = 6.00)]
-        public double AsiaCageEnd { get; set; }
+        [Parameter("End (UTC 0)", Group = "Cage", MinValue = "00:00:00", MaxValue = "23:59:59", DefaultValue = "06:00:00")]
+        public TimeSpan AsiaCageEnd { get; set; }
 
         [Parameter("Color", Group = "Cage", DefaultValue = "Yellow")]
         public Color AsiaCageColor { get; set; }
@@ -102,6 +102,9 @@ namespace cAlgo
 
         [Parameter("Levels Color", Group = "Cage", DefaultValue = "#3CFFFF00")]
         public Color CageLevelsColor { get; set; }
+
+        [Parameter("Show Mid Signal", Group = "Cage", DefaultValue = false)]
+        public bool ShowCageMidSignal { get; set; }
 
         #endregion
 
@@ -286,8 +289,8 @@ namespace cAlgo
 
             DateTime dayEnd = dayStart.AddMinutes(GetTimeFrameCandleInMinutes(CandleTimeFrame));
 
-            DateTime cageStart = dayDate + ParseTimeValue(AsiaCageStart);
-            DateTime cageEnd = dayDate + ParseTimeValue(AsiaCageEnd);
+            DateTime cageStart = dayDate + AsiaCageStart;
+            DateTime cageEnd = dayDate + AsiaCageEnd;
 
             if (cageEnd <= cageStart)
                 cageEnd = cageEnd.AddDays(1);
@@ -322,6 +325,7 @@ namespace cAlgo
             string cageName = "AsiaCage" + rangeFlag;
             string highLevelName = "AsiaCageHighLevel" + rangeFlag;
             string lowLevelName = "AsiaCageLowLevel" + rangeFlag;
+            string midLevelName = "AsiaCageMidLevel" + rangeFlag;
 
             if (cageHigh == null || cageLow == null)
             {
@@ -329,6 +333,7 @@ namespace cAlgo
                 Chart.RemoveObject(cageName);
                 Chart.RemoveObject(highLevelName);
                 Chart.RemoveObject(lowLevelName);
+                Chart.RemoveObject(midLevelName);
                 return;
 
             }
@@ -355,23 +360,22 @@ namespace cAlgo
 
             }
 
-        }
-
-        private TimeSpan ParseTimeValue(double value)
-        {
-
-            int hours = (int)Math.Floor(value);
-            int minutes = (int)Math.Round((value - hours) * 100);
-
-            if (minutes >= 60)
+            if (DrawCageLevels && ShowCageMidSignal)
             {
 
-                hours += 1;
-                minutes -= 60;
+                double cageMid = (cageHigh.Value + cageLow.Value) / 2;
+
+                ChartTrendLine MidLevelLine = Chart.DrawTrendLine(midLevelName, cageStart, cageMid, dayEnd, cageMid, CageLevelsColor, TicknessCageLevels, LineStyleCageLevels);
+
+                MidLevelLine.ExtendToInfinity = false;
 
             }
+            else
+            {
 
-            return new TimeSpan(hours, minutes, 0);
+                Chart.RemoveObject(midLevelName);
+
+            }
 
         }
 
